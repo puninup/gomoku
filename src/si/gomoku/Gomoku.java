@@ -1,10 +1,10 @@
 package si.gomoku;
 
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import si.gomoku.components.Game;
+import si.gomoku.game.Game;
 
 /**
  * @author Tomasz Urbas
@@ -12,6 +12,7 @@ import si.gomoku.components.Game;
 public class Gomoku extends Application {
 
     private Game game;
+    private GameControl gameControl;
 
     public static void main(String[] args) {
         launch(args);
@@ -29,8 +30,9 @@ public class Gomoku extends Application {
 
     private Scene getScene() {
         game.setUpView();
-        Group root = new Group(game.getView());
-        return new Scene(root, 800, 600);
+        BorderPane root = new BorderPane();
+        root.setCenter(game.getView());
+        return new Scene(root, 1000, 650);
     }
 
     @Override

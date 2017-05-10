@@ -2,9 +2,9 @@ package si.gomoku.actions;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import si.gomoku.components.Board;
-import si.gomoku.components.Field;
-import si.gomoku.components.Stone;
+import si.gomoku.game.Board;
+import si.gomoku.game.Field;
+import si.gomoku.game.Stone;
 
 /**
  * @author Tomasz Urbas

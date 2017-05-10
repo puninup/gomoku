@@ -1,4 +1,4 @@
-package si.gomoku.components;
+package si.gomoku.game;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
@@ -72,6 +72,11 @@ public class Board {
             }
         }
         return false;
+    }
+
+    public void reset() {
+        fields.forEach(field -> field.putStone(Stone.NONE));
+        lastMove = EMPTY_FIELD;
     }
 
     public Field getLastMove() {

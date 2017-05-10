@@ -1,4 +1,4 @@
-package si.gomoku.components;
+package si.gomoku.game;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
