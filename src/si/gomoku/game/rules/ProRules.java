@@ -1,4 +1,4 @@
-package si.gomoku.rules;
+package si.gomoku.game.rules;
 
 import si.gomoku.Direction;
 import si.gomoku.game.Board;
@@ -125,7 +125,6 @@ public class ProRules implements RulesSet {
         int currentSequence = 0;
         List<Stone> stoneSequence = fields.map(Field::getStone).collect(Collectors.toList());
         for (Stone stone : stoneSequence) {
-            System.out.print(stone.name() + " ");
             if (stone == stoneToSequence) {
                 currentSequence++;
             } else {
@@ -133,7 +132,6 @@ public class ProRules implements RulesSet {
                 currentSequence = 0;
             }
         }
-        System.out.println();
         return (currentSequence > longestSequence) ? currentSequence : longestSequence;
     }
 

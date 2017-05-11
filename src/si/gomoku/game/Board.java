@@ -75,7 +75,7 @@ public class Board {
     }
 
     public void reset() {
-        fields.forEach(field -> field.putStone(Stone.NONE));
+        fields.forEach(Field::reset);
         lastMove = EMPTY_FIELD;
     }
 

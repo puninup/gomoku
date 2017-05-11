@@ -13,18 +13,26 @@ public class Field {
 
     private int row;
     private int column;
-    private Stone stone = Stone.NONE;
-    private boolean active = false;
+    private Stone stone;
+    private boolean active;
 
     Field (int row, int column) {
         this.row = row;
         this.column = column;
+        reset();
     }
 
     public void putStone(Stone stone) {
         this.stone = stone;
         this.active = false;
         showStoneIfHasView();
+    }
+
+    public void reset() {
+        this.stone = Stone.NONE;
+        this.active = true;
+        showStoneIfHasView();
+        showActiveIfHasView();
     }
 
     public Stone getStone() {
@@ -101,7 +109,7 @@ public class Field {
 
     public void setUpView() {
         backgroundView = new Rectangle();
-        backgroundView.setFill(Color.BISQUE);
+        backgroundView.setFill(Color.CHOCOLATE);
         backgroundView.setWidth(SIZE - 2 * STROKE_SIZE);
         backgroundView.setHeight(SIZE - 2 * STROKE_SIZE);
         backgroundView.setStrokeWidth(STROKE_SIZE);

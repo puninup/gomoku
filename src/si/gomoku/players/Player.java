@@ -8,6 +8,7 @@ import si.gomoku.game.Stone;
  */
 public abstract class Player {
 
+    boolean stopped;
     Board board;
     Stone stone;
 
@@ -16,5 +17,14 @@ public abstract class Player {
         this.stone = stone;
     }
 
-    public abstract void doMove();
+    public void doMove() {
+        move();
+        stopped = false;
+    }
+
+    public abstract void move();
+
+    public void stop() {
+        stopped = true;
+    }
 }

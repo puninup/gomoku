@@ -14,7 +14,7 @@ public class Human extends Player {
     }
 
     @Override
-    public void doMove() {
+    public void move() {
         board.enableHumanInteraction(stone);
         waitForMove();
         board.disableHumanInteraction();
@@ -22,7 +22,7 @@ public class Human extends Player {
 
     private void waitForMove() {
         Field lastMove = board.getLastMove();
-        while (lastMove.equals(board.getLastMove())) {
+        while (lastMove.equals(board.getLastMove()) && !stopped) {
             try {
                 Thread.sleep(10);
             } catch (Exception e) {

@@ -1,10 +1,13 @@
 package si.gomoku;
 
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import si.gomoku.game.Game;
+import si.gomoku.control.GameControl;
 
 /**
  * @author Tomasz Urbas
@@ -21,17 +24,19 @@ public class Gomoku extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         game = new Game();
+        gameControl = new GameControl(game);
         game.start();
+
         primaryStage.setTitle("TU GomokuPRO");
         primaryStage.setScene(getScene());
         primaryStage.show();
-        game.startGame();
     }
 
     private Scene getScene() {
-        game.setUpView();
         BorderPane root = new BorderPane();
-        root.setCenter(game.getView());
+        root.setPadding(new Insets(15, 15, 15, 15));
+        root.setLeft(game.setUpAndGetView());
+        root.setTop(gameControl.setUpAndGetView());
         return new Scene(root, 1000, 650);
     }
 

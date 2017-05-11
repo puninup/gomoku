@@ -1,4 +1,4 @@
-package si.gomoku.rules;
+package si.gomoku.game.rules;
 
 /**
  * @author Tomasz Urbas
