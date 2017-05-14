@@ -31,8 +31,6 @@ public class Game extends Thread implements Observer {
     public Game() {
         board = new Board();
         rules = new ProRules(board);
-        darkPlayer = new Human(board, Stone.DARK);
-        lightPlayer = new Human(board, Stone.LIGHT);
         timer = new CountDownTimer();
         timer.setUp(1,0);
         timer.addObserver(this);
@@ -105,6 +103,17 @@ public class Game extends Thread implements Observer {
             wait(50);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        }
+    }
+
+    public void assignPlayer(Player.Type playerType, Stone stone) {
+        Player player = playerType.getInstance(board, stone);
+        switch (stone) {
+            case DARK:
+                this.darkPlayer = player;
+                break;
+            case LIGHT:
+                this.lightPlayer = player;
         }
     }
 

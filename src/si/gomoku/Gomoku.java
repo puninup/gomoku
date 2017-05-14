@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import si.gomoku.control.PlayersSettings;
 import si.gomoku.game.Game;
 import si.gomoku.control.GameControl;
 
@@ -16,6 +17,7 @@ public class Gomoku extends Application {
 
     private Game game;
     private GameControl gameControl;
+    private PlayersSettings playersSettings;
 
     public static void main(String[] args) {
         launch(args);
@@ -25,6 +27,7 @@ public class Gomoku extends Application {
     public void start(Stage primaryStage) throws Exception {
         game = new Game();
         gameControl = new GameControl(game);
+        playersSettings = new PlayersSettings(game);
         game.start();
 
         primaryStage.setTitle("TU GomokuPRO");
@@ -37,6 +40,7 @@ public class Gomoku extends Application {
         root.setPadding(new Insets(15, 15, 15, 15));
         root.setLeft(game.setUpAndGetView());
         root.setTop(gameControl.setUpAndGetView());
+        root.setRight(playersSettings.setUpAndGetView());
         return new Scene(root, 1000, 650);
     }
 

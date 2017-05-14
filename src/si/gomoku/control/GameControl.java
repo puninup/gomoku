@@ -45,7 +45,7 @@ public class GameControl {
         view.setSpacing(10);
     }
 
-    public Node setUpAndGetView() {
+    public HBox setUpAndGetView() {
         setUpView();
         return view;
     }

@@ -27,4 +27,20 @@ public abstract class Player {
     public void stop() {
         stopped = true;
     }
+
+    public enum Type {
+        HUMAN {
+            @Override
+            public Player getInstance(Board board, Stone stone) {
+                return new Human(board, stone);
+            }
+
+            @Override
+            public String toString() {
+                return "Człowiek";
+            }
+        };
+
+        public abstract Player getInstance(Board board, Stone stone);
+    }
 }
