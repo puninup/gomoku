@@ -23,6 +23,7 @@ public abstract class Player {
     }
 
     public abstract void move();
+    public abstract void setDeep(int value);
 
     public void stop() {
         stopped = true;

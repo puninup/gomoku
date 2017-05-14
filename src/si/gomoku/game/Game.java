@@ -117,6 +117,16 @@ public class Game extends Thread implements Observer {
         }
     }
 
+    public void setPlayerDeep(int value, Stone stone) {
+        switch (stone) {
+            case DARK:
+                this.darkPlayer.setDeep(value);
+                break;
+            case LIGHT:
+                this.lightPlayer.setDeep(value);
+        }
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         currentPlayer.stop();

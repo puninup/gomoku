@@ -1,6 +1,5 @@
 package si.gomoku;
 
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -41,7 +40,7 @@ public class Gomoku extends Application {
         root.setLeft(game.setUpAndGetView());
         root.setTop(gameControl.setUpAndGetView());
         root.setRight(playersSettings.setUpAndGetView());
-        return new Scene(root, 1000, 650);
+        return new Scene(root, 850, 650);
     }
 
     @Override

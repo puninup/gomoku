@@ -3,7 +3,6 @@ package si.gomoku.control;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -26,7 +25,7 @@ public class PlayersSettings {
     }
 
     // VIEW -----------------------
-    private HBox view;
+    private VBox view;
     private VBox darkPlayerBox;
     private VBox lightPlayerBox;
 
@@ -34,7 +33,7 @@ public class PlayersSettings {
         createDarkPlayerBox();
         createLightPlayerBox();
 
-        view = new HBox(darkPlayerBox, lightPlayerBox);
+        view = new VBox(darkPlayerBox, lightPlayerBox);
         view.setSpacing(15);
     }
 
@@ -52,23 +51,26 @@ public class PlayersSettings {
         playerBox.setBorder(new Border(
                 new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))
         ));
-        playerBox.setPrefSize(170, 100);
-        playerBox.setMaxSize(170, 100);
-        playerBox.setAlignment(Pos.BASELINE_CENTER);
+        playerBox.setPrefSize(200, 130);
+        playerBox.setMaxSize(200, 130);
+        playerBox.setAlignment(Pos.TOP_CENTER);
 
         Label nameLabel = new Label(name);
         nameLabel.setFont(Font.font("Cambria", 16));
+        nameLabel.setPadding(new Insets(10));
 
         ChoiceBox<Player.Type> playerTypes = new ChoiceBox<>(FXCollections.observableArrayList(Player.Type.values()));
         playerTypes.getSelectionModel().selectedItemProperty().addListener(new ChangePlayer(game, stone));
         playerTypes.setValue(Player.Type.HUMAN);
-        playerTypes.setPrefWidth(150);
+        playerTypes.setPrefWidth(180);
 
-        playerBox.getChildren().add(nameLabel);
-        playerBox.getChildren().add(playerTypes);
+        VBox siSettings = new SISettings(game, stone).setUpAndGetView();
+        siSettings.setPadding(new Insets(10));
+
+        playerBox.getChildren().addAll(nameLabel, playerTypes, siSettings);
     }
 
-    public HBox setUpAndGetView() {
+    public VBox setUpAndGetView() {
         setUpView();
         return view;
     }
