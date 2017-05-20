@@ -23,6 +23,11 @@ enum Level {
         }
 
         @Override
+        public boolean isBetterOrEqual(int newValue, int oldValue) {
+            return newValue <= oldValue;
+        }
+
+        @Override
         public Stone getStone(Stone myStone) {
             return myStone.oppositeStone();
         }
@@ -44,6 +49,11 @@ enum Level {
         }
 
         @Override
+        public boolean isBetterOrEqual(int newValue, int oldValue) {
+            return newValue >= oldValue;
+        }
+
+        @Override
         public Stone getStone(Stone myStone) {
             return myStone;
         }
@@ -52,5 +62,6 @@ enum Level {
     public abstract Integer getWorstValue();
     public abstract Level opposite();
     public abstract boolean isBetter(int newValue, int oldValue);
+    public abstract boolean isBetterOrEqual(int newValue, int oldValue);
     public abstract Stone getStone(Stone myStone);
 }

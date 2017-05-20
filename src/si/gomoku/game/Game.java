@@ -103,6 +103,10 @@ public class Game extends Thread implements Observer {
         timer.stop();
         Optional.ofNullable(currentPlayer).ifPresent(Player::stop);
         currentPlayer = null;
+
+        for (GameObserver observer : observers) {
+            observer.stopGame();
+        }
     }
 
     private Player getNextPlayer() {
@@ -139,6 +143,10 @@ public class Game extends Thread implements Observer {
             default:
                 return lightPlayer;
         }
+    }
+
+    public void setUpTimer(int minutes, int seconds) {
+        this.timer.setUp(minutes, seconds);
     }
 
     @Override

@@ -26,7 +26,6 @@ public abstract class Player {
     }
 
     public abstract void move(int moveNumber);
-    public abstract void setDepth(int value);
 
     public void stop() {
         stopped = true;

@@ -35,7 +35,9 @@ public class Board implements Copyable<Board> {
     public void putStone(int row, int column, Stone stone) {
         Field field = fields.get(row, column);
         field.putStone(stone);
+        lastMove.unmark();
         lastMove = field;
+        lastMove.mark();
     }
 
     public void pickUpStone(int row, int column) {
@@ -63,6 +65,10 @@ public class Board implements Copyable<Board> {
         return fields.asList().stream()
                 .filter(Field::isActive)
                 .collect(Collectors.toList());
+    }
+
+    public List<Field> getAllFields() {
+        return fields.asList();
     }
 
     public List<Field> getFieldsWithStone(Stone stone) {

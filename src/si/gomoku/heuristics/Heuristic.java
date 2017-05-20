@@ -51,4 +51,31 @@ public abstract class Heuristic {
             evaluator.revertUpdate();
         }
     }
+
+    public enum Type {
+        GROUP {
+            @Override
+            public Heuristic getInstance() {
+                return new GroupHeuristic();
+            }
+
+            @Override
+            public String toString() {
+                return "Ocenianie grup";
+            }
+        },
+        NEIGHBORS {
+            @Override
+            public Heuristic getInstance() {
+                return new NeighborsHeuristic();
+            }
+
+            @Override
+            public String toString() {
+                return "Pole do popisu";
+            }
+        };
+
+        public abstract Heuristic getInstance();
+    }
 }

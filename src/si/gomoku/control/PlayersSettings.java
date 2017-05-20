@@ -58,13 +58,6 @@ public class PlayersSettings {
     }
 
     private void createPlayerBox(VBox playerBox, Stone stone, String name) {
-        playerBox.setBorder(new Border(
-                new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))
-        ));
-        playerBox.setPrefSize(200, 130);
-        playerBox.setMaxSize(200, 130);
-        playerBox.setAlignment(Pos.TOP_CENTER);
-
         Label nameLabel = new Label(name);
         nameLabel.setFont(Font.font("Cambria", 16));
         nameLabel.setPadding(new Insets(10));
@@ -75,6 +68,12 @@ public class PlayersSettings {
 
         VBox aiSettings = new VBox();
 
+        playerBox.setBorder(new Border(
+                new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))
+        ));
+        playerBox.setMinHeight(80);
+        playerBox.setPrefWidth(200);
+        playerBox.setAlignment(Pos.TOP_CENTER);
         playerBox.getChildren().addAll(nameLabel, playerTypes, aiSettings);
         playerTypes.setValue(Player.Type.HUMAN);
     }

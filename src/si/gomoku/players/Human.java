@@ -33,10 +33,6 @@ public class Human extends Player {
         }
     }
 
-    @Override
-    public void setDepth(int value) {
-    }
-
     // VIEW --------------------------
     public VBox getSettingsView() {
         return new VBox();

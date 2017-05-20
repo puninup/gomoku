@@ -63,6 +63,14 @@ public class Field implements Copyable<Field> {
         showInactiveIfHasView();
     }
 
+    void mark() {
+        showHighlightIfHasView();
+    }
+
+    void unmark() {
+        hideHighlightIfHasView();
+    }
+
     public boolean isActive() {
         return active && stone == Stone.NONE;
     }
@@ -103,6 +111,7 @@ public class Field implements Copyable<Field> {
     private void showStoneIfHasView() {
         if (view != null) {
             stoneView.setFill(stone.getColor());
+            stoneView.setStroke(stone.getColor());
         }
     }
 
@@ -118,6 +127,18 @@ public class Field implements Copyable<Field> {
         }
     }
 
+    private void showHighlightIfHasView() {
+        if (view != null) {
+            stoneView.setStroke(Color.DARKCYAN);
+        }
+    }
+
+    private void hideHighlightIfHasView() {
+        if (view != null) {
+            stoneView.setStroke(stone.getColor());
+        }
+    }
+
     public void setUpView() {
         backgroundView = new Rectangle();
         backgroundView.setFill(Color.CHOCOLATE);
@@ -129,6 +150,8 @@ public class Field implements Copyable<Field> {
         stoneView = new Circle(STONE_RADIUS, stone.getColor());
         stoneView.setCenterX(SIZE / 2);
         stoneView.setCenterY(SIZE / 2);
+        stoneView.setStrokeWidth(STROKE_SIZE * 3);
+        stoneView.setStroke(stone.getColor());
 
         view = new Group(backgroundView, stoneView);
     }
