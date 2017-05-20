@@ -29,6 +29,16 @@ public class PlayersSettings {
     private VBox darkPlayerBox;
     private VBox lightPlayerBox;
 
+    public void updatePlayerBoxIfExists(Stone stone) {
+        if (stone == Stone.DARK && darkPlayerBox != null) {
+            darkPlayerBox.getChildren().remove(2);
+            darkPlayerBox.getChildren().add(game.getPlayer(stone).getSettingsView());
+        } else if (stone == Stone.LIGHT && lightPlayerBox != null) {
+            lightPlayerBox.getChildren().remove(2);
+            lightPlayerBox.getChildren().add(game.getPlayer(stone).getSettingsView());
+        }
+    }
+
     private void setUpView() {
         createDarkPlayerBox();
         createLightPlayerBox();
@@ -60,14 +70,13 @@ public class PlayersSettings {
         nameLabel.setPadding(new Insets(10));
 
         ChoiceBox<Player.Type> playerTypes = new ChoiceBox<>(FXCollections.observableArrayList(Player.Type.values()));
-        playerTypes.getSelectionModel().selectedItemProperty().addListener(new ChangePlayer(game, stone));
-        playerTypes.setValue(Player.Type.HUMAN);
+        playerTypes.getSelectionModel().selectedItemProperty().addListener(new ChangePlayer(game, stone, this));
         playerTypes.setPrefWidth(180);
 
-        VBox siSettings = new SISettings(game, stone).setUpAndGetView();
-        siSettings.setPadding(new Insets(10));
+        VBox aiSettings = new VBox();
 
-        playerBox.getChildren().addAll(nameLabel, playerTypes, siSettings);
+        playerBox.getChildren().addAll(nameLabel, playerTypes, aiSettings);
+        playerTypes.setValue(Player.Type.HUMAN);
     }
 
     public VBox setUpAndGetView() {

@@ -1,5 +1,6 @@
 package si.gomoku.players;
 
+import javafx.scene.layout.VBox;
 import si.gomoku.game.Board;
 import si.gomoku.game.Field;
 import si.gomoku.game.Stone;
@@ -14,7 +15,7 @@ public class Human extends Player {
     }
 
     @Override
-    public void move() {
+    public void move(int moveNumber) {
         board.enableHumanInteraction(stone);
         waitForMove();
         board.disableHumanInteraction();
@@ -33,6 +34,11 @@ public class Human extends Player {
     }
 
     @Override
-    public void setDeep(int value) {
+    public void setDepth(int value) {
+    }
+
+    // VIEW --------------------------
+    public VBox getSettingsView() {
+        return new VBox();
     }
 }

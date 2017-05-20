@@ -5,7 +5,10 @@ import si.gomoku.game.Board;
 import si.gomoku.game.Field;
 import si.gomoku.game.Stone;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -14,41 +17,33 @@ import java.util.stream.Stream;
  */
 public class ProRules implements RulesSet {
 
-    private Board board;
-    private int middleRow;
-    private int middleColumn;
-
-    public ProRules(Board board) {
-        this.board = board;
-        this.middleRow = Board.FIELDS_IN_ROW / 2;
-        this.middleColumn = Board.FIELDS_IN_ROW / 2;
-    }
-
     @Override
-    public void performForMove(int move) {
+    public void performForMove(int move, Board board) {
         switch (move) {
             case 1:
-                lockAllFields();
-                unlockSquareAtMiddle(1);
+                lockAllFields(board);
+                unlockSquareAtMiddle(1, board);
                 break;
             case 2:
-                unlockSquareAtMiddle(3);
-                lockSquareAtMiddle(1);
+                unlockSquareAtMiddle(3, board);
+                lockSquareAtMiddle(1, board);
                 break;
             case 3:
-                unlockAllFields();
-                lockSquareAtMiddle(5);
+                unlockAllFields(board);
+                lockSquareAtMiddle(5, board);
                 break;
             case 4:
-                unlockSquareAtMiddle(5);
+                unlockSquareAtMiddle(5, board);
         }
     }
 
-    private void lockAllFields() {
-        lockSquareAtMiddle(Board.FIELDS_IN_ROW);
+    private void lockAllFields(Board board) {
+        lockSquareAtMiddle(Board.DIMENSION, board);
     }
 
-    private void lockSquareAtMiddle(int width) {
+    private void lockSquareAtMiddle(int width, Board board) {
+        int middleRow = Board.MIDDLE_ROW;
+        int middleColumn = Board.MIDDLE_COLUMN;
         int radius = width / 2;
         for (int row = middleRow - radius; row <= middleRow + radius; row++) {
             for (int column = middleColumn - radius; column <= middleColumn + radius; column++) {
@@ -57,11 +52,13 @@ public class ProRules implements RulesSet {
         }
     }
 
-    private void unlockAllFields() {
-        unlockSquareAtMiddle(Board.FIELDS_IN_ROW);
+    private void unlockAllFields(Board board) {
+        unlockSquareAtMiddle(Board.DIMENSION, board);
     }
 
-    private void unlockSquareAtMiddle(int width) {
+    private void unlockSquareAtMiddle(int width, Board board) {
+        int middleRow = Board.MIDDLE_ROW;
+        int middleColumn = Board.MIDDLE_COLUMN;
         int radius = width / 2;
         for (int row = middleRow - radius; row <= middleRow + radius; row++) {
             for (int column = middleColumn - radius; column <= middleColumn + radius; column++) {
@@ -71,56 +68,56 @@ public class ProRules implements RulesSet {
     }
 
     @Override
-    public boolean isWinning() {
+    public boolean isWinning(Board board) {
         Field lastMove = board.getLastMove();
-        return isWinningOnHorizontalLine(lastMove)
-                || isWinningOnVerticalLine(lastMove)
-                || isWinningOnDiagonalLeftLine(lastMove)
-                || isWinningOnDiagonalRightLine(lastMove);
+        return horizontalLineSequenceValue(lastMove, board) == 5
+                || verticalLineSequenceValue(lastMove, board) == 5
+                || diagonalLeftLineSequenceValue(lastMove, board) == 5
+                || diagonalRightLineSequenceValue(lastMove, board) == 5;
     }
 
-    private boolean isWinningOnHorizontalLine(Field middleField) {
-        return isWinningOnLine(middleField, Direction.LEFT, Direction.RIGHT);
+    private int horizontalLineSequenceValue(Field middleField, Board board) {
+        return sequenceValueOnLine(middleField, Direction.LEFT, Direction.RIGHT, board);
     }
 
-    private boolean isWinningOnVerticalLine(Field middleField) {
-        return isWinningOnLine(middleField, Direction.TOP, Direction.BOTTOM);
+    private int verticalLineSequenceValue(Field middleField, Board board) {
+        return sequenceValueOnLine(middleField, Direction.TOP, Direction.BOTTOM, board);
     }
 
-    private boolean isWinningOnDiagonalLeftLine(Field middleField) {
-        return isWinningOnLine(middleField, Direction.TOP_LEFT, Direction.BOTTOM_RIGHT);
+    private int diagonalLeftLineSequenceValue(Field middleField, Board board) {
+        return sequenceValueOnLine(middleField, Direction.TOP_LEFT, Direction.BOTTOM_RIGHT, board);
     }
 
-    private boolean isWinningOnDiagonalRightLine(Field middleField) {
-        return isWinningOnLine(middleField, Direction.TOP_RIGHT, Direction.BOTTOM_LEFT);
+    private int diagonalRightLineSequenceValue(Field middleField, Board board) {
+        return sequenceValueOnLine(middleField, Direction.TOP_RIGHT, Direction.BOTTOM_LEFT, board);
     }
 
-    private boolean isWinningOnLine(Field middleField, Direction from, Direction to) {
-        List<Field> leftFields = move(middleField, from, 5);
+    private int sequenceValueOnLine(Field middleField, Direction from, Direction to, Board board) {
+        List<Field> leftFields = move(middleField, from, 5, board);
         Collections.reverse(leftFields);
-        List<Field> rightFields = move(middleField, to, 5);
+        List<Field> rightFields = move(middleField, to, 5, board);
         Stream<Field> fields = Stream.of(leftFields, Collections.singletonList(middleField), rightFields)
                 .flatMap(Collection::stream);
-        return getLongestSequence(fields, middleField.getStone()) == 5;
+        return getLongestSequence(fields, middleField.getStone());
     }
 
-    private List<Field> move (Field from, Direction direction, int numberOfSteps) {
+    private List<Field> move(Field from, Direction direction, int numberOfSteps, Board board) {
         List<Field> visitedFields = new LinkedList<>();
         while (numberOfSteps > 0) {
-            from = doStep(from, direction);
+            from = doStep(from, direction, board);
             visitedFields.add(from);
             numberOfSteps--;
         }
         return visitedFields;
     }
 
-    private Field doStep(Field from, Direction direction) {
+    private static Field doStep(Field from, Direction direction, Board board) {
         int row = from.getRow();
         int column = from.getColumn();
         return board.getField(row + direction.getRowStep(), column + direction.getColumnStep());
     }
 
-    private int getLongestSequence(Stream<Field> fields, Stone stoneToSequence) {
+    private static int getLongestSequence(Stream<Field> fields, Stone stoneToSequence) {
         int longestSequence = 0;
         int currentSequence = 0;
         List<Stone> stoneSequence = fields.map(Field::getStone).collect(Collectors.toList());
@@ -136,7 +133,7 @@ public class ProRules implements RulesSet {
     }
 
     @Override
-    public boolean isDraw() {
+    public boolean isDraw(Board board) {
         return !board.isAnyEmptyField();
     }
 }

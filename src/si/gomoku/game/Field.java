@@ -5,11 +5,13 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import si.gomoku.Copyable;
 
 /**
  * @author Tomasz Urbas
  */
-public class Field {
+public class Field implements Copyable<Field> {
+    public static Field EMPTY_FIELD = new Field(-1, -1);
 
     private int row;
     private int column;
@@ -22,9 +24,13 @@ public class Field {
         reset();
     }
 
-    public void putStone(Stone stone) {
+    void putStone(Stone stone) {
         this.stone = stone;
-        this.active = false;
+        showStoneIfHasView();
+    }
+
+    void pickUpStone() {
+        this.stone = Stone.NONE;
         showStoneIfHasView();
     }
 
@@ -48,9 +54,7 @@ public class Field {
     }
 
     public void activate() {
-        if (stone == Stone.NONE) {
-            active = true;
-        }
+        active = true;
         showActiveIfHasView();
     }
 
@@ -60,7 +64,14 @@ public class Field {
     }
 
     public boolean isActive() {
-        return active;
+        return active && stone == Stone.NONE;
+    }
+
+    public Field copy() {
+        Field field = new Field(row, column);
+        field.stone = stone;
+        field.active = active;
+        return field;
     }
 
     @Override

@@ -4,13 +4,11 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import si.gomoku.CountDownTimer;
-import si.gomoku.players.Human;
+import si.gomoku.game.rules.ProRules;
+import si.gomoku.game.rules.RulesSet;
 import si.gomoku.players.Player;
-import si.gomoku.game.rules.*;
 
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Tomasz Urbas
@@ -28,9 +26,12 @@ public class Game extends Thread implements Observer {
     private CountDownTimer timer;
     private int movesCounter;
 
+    private List<GameObserver> observers = new LinkedList<>();
+
     public Game() {
         board = new Board();
-        rules = new ProRules(board);
+        board.setUpFields();
+        rules = new ProRules();
         timer = new CountDownTimer();
         timer.setUp(1,0);
         timer.addObserver(this);
@@ -57,16 +58,21 @@ public class Game extends Thread implements Observer {
     }
 
     private void startRound() {
-        rules.performForMove(movesCounter + 1);
+        rules.performForMove(movesCounter + 1, board);
+
+        for (GameObserver observer : observers) {
+            observer.nextTurn(board.getLastMove().getStone().oppositeStone());
+        }
+
         timer.reset();
         timer.start();
-        currentPlayer.doMove();
+        currentPlayer.doMove(movesCounter + 1);
     }
 
     private void endRound() {
         timer.stop();
         movesCounter++;
-        if (rules.isWinning() || rules.isDraw()) {
+        if (rules.isWinning(board) || rules.isDraw(board)) {
             endGame();
             return;
         }
@@ -75,6 +81,15 @@ public class Game extends Thread implements Observer {
 
     private void endGame() {
         stopGame();
+
+        Stone winner = null;
+        if (!rules.isDraw(board)) {
+            winner = board.getLastMove().getStone();
+        }
+
+        for (GameObserver observer : observers) {
+            observer.endGame(winner);
+        }
     }
 
     public void resetGame() {
@@ -107,7 +122,7 @@ public class Game extends Thread implements Observer {
     }
 
     public void assignPlayer(Player.Type playerType, Stone stone) {
-        Player player = playerType.getInstance(board, stone);
+        Player player = playerType.getInstance(board, stone, rules);
         switch (stone) {
             case DARK:
                 this.darkPlayer = player;
@@ -117,19 +132,22 @@ public class Game extends Thread implements Observer {
         }
     }
 
-    public void setPlayerDeep(int value, Stone stone) {
+    public Player getPlayer(Stone stone) {
         switch (stone) {
             case DARK:
-                this.darkPlayer.setDeep(value);
-                break;
-            case LIGHT:
-                this.lightPlayer.setDeep(value);
+                return darkPlayer;
+            default:
+                return lightPlayer;
         }
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        currentPlayer.stop();
+        currentPlayer.nextTurn();
+    }
+
+    public void addObserver(GameObserver observer) {
+        observers.add(observer);
     }
 
     // VIEW ------------------------------

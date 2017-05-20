@@ -1,14 +1,16 @@
 package si.gomoku.players;
 
+import javafx.scene.layout.VBox;
 import si.gomoku.game.Board;
 import si.gomoku.game.Stone;
+import si.gomoku.game.rules.RulesSet;
 
 /**
  * @author Tomasz Urbas
  */
 public abstract class Player {
-
     boolean stopped;
+    boolean endOfTime;
     Board board;
     Stone stone;
 
@@ -17,22 +19,30 @@ public abstract class Player {
         this.stone = stone;
     }
 
-    public void doMove() {
-        move();
+    public void doMove(int moveNumber) {
         stopped = false;
+        endOfTime = false;
+        move(moveNumber);
     }
 
-    public abstract void move();
-    public abstract void setDeep(int value);
+    public abstract void move(int moveNumber);
+    public abstract void setDepth(int value);
 
     public void stop() {
         stopped = true;
     }
 
+    public void nextTurn() {
+        endOfTime = true;
+        stop();
+    }
+
+    public abstract VBox getSettingsView();
+
     public enum Type {
         HUMAN {
             @Override
-            public Player getInstance(Board board, Stone stone) {
+            public Player getInstance(Board board, Stone stone, RulesSet rulesSet) {
                 return new Human(board, stone);
             }
 
@@ -40,8 +50,19 @@ public abstract class Player {
             public String toString() {
                 return "Człowiek";
             }
+        },
+        MIN_MAX {
+            @Override
+            public Player getInstance(Board board, Stone stone, RulesSet rules) {
+                return new MinMax(board, stone, rules);
+            }
+
+            @Override
+            public String toString() {
+                return "Min-max";
+            }
         };
 
-        public abstract Player getInstance(Board board, Stone stone);
+        public abstract Player getInstance(Board board, Stone stone, RulesSet rules);
     }
 }
