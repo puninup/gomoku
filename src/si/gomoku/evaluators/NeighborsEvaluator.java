@@ -48,4 +48,8 @@ public class NeighborsEvaluator implements Evaluator {
     @Override
     public void updateValueFor(int row, int column) {
     }
+
+    @Override
+    public void revertUpdate() {
+    }
 }

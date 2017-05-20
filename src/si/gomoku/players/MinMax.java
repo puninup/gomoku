@@ -63,7 +63,7 @@ public class MinMax extends Player {
             heuristic.updateValueFor(field.getRow(), field.getColumn());
             int current = minMax(level.opposite(), depth + 1, moveNumber + 1, board);
             board.pickUpStone(field.getRow(), field.getColumn());
-            heuristic.updateValueFor(field.getRow(), field.getColumn());
+            heuristic.revertUpdate();
             if (level.isBetter(current, best)) {
                 best = current;
                 if (depth == 1) {

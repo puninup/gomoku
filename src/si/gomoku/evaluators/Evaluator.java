@@ -10,4 +10,5 @@ public interface Evaluator {
     void renew(Board board, Stone stone);
     int evaluate();
     void updateValueFor(int row, int column);
+    void revertUpdate();
 }

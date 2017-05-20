@@ -45,4 +45,10 @@ public abstract class Heuristic {
             evaluator.updateValueFor(row, column);
         }
     }
+
+    public void revertUpdate() {
+        for(Evaluator evaluator : weightOfEvaluators.keySet()) {
+            evaluator.revertUpdate();
+        }
+    }
 }

@@ -70,7 +70,7 @@ public abstract class Player {
 
             @Override
             public String toString() {
-                return "Alpha-beta";
+                return "Alfa-beta";
             }
         };
 

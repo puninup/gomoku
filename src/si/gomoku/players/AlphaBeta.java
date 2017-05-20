@@ -63,7 +63,7 @@ public class AlphaBeta extends Player {
             heuristic.updateValueFor(field.getRow(), field.getColumn());
             int current = alphaBeta(level.opposite(), depth + 1, best, moveNumber + 1, board);
             board.pickUpStone(field.getRow(), field.getColumn());
-            heuristic.updateValueFor(field.getRow(), field.getColumn());
+            heuristic.revertUpdate();
             if (level.isBetter(current, best)) {
                 best = current;
                 if (depth == 1) {

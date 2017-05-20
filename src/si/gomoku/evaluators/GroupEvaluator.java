@@ -4,9 +4,7 @@ import si.gomoku.game.Board;
 import si.gomoku.game.MatrixPartIndex;
 import si.gomoku.game.Stone;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Tomasz Urbas
@@ -28,11 +26,25 @@ public class GroupEvaluator implements Evaluator {
     private Board board;
     private Stone stone;
     private Map<MatrixPartIndex, Integer> valueOfPartIndex;
+    private Deque<Map<MatrixPartIndex, Integer>> updateDeque;
 
+    @Override
+    public void updateValueFor(int row, int column) {
+        Map<MatrixPartIndex, Integer> currentState = new HashMap<>();
+        List<MatrixPartIndex> partIndexes = board.getPartIndexesFor(row, column);
+        for(MatrixPartIndex partIndex : partIndexes) {
+            currentState.put(partIndex, valueOfPartIndex.get(partIndex));
+            updatePartValue(partIndex);
+        }
+        updateDeque.push(currentState);
+    }
+
+    @Override
     public void renew(Board board, Stone stone) {
         this.board = board;
         this.stone = stone;
         this.valueOfPartIndex = new HashMap<>();
+        this.updateDeque = new ArrayDeque<>();
         initValues();
     }
 
@@ -91,16 +103,15 @@ public class GroupEvaluator implements Evaluator {
         return 0;
     }
 
+    @Override
     public int evaluate() {
         return valueOfPartIndex.values().stream()
                 .mapToInt(Integer::intValue)
                 .sum();
     }
 
-    public void updateValueFor(int row, int column) {
-        List<MatrixPartIndex> partIndexes = board.getPartIndexesFor(row, column);
-        for(MatrixPartIndex partIndex : partIndexes) {
-            updatePartValue(partIndex);
-        }
+    public void revertUpdate() {
+        Map<MatrixPartIndex, Integer> previousState = updateDeque.pop();
+        valueOfPartIndex.putAll(previousState);
     }
 }
