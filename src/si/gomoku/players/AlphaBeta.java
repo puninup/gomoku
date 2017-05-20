@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author Tomasz Urbas
  */
-public class MinMax extends Player {
+public class AlphaBeta extends Player {
 
     private RulesSet rules;
     private int maxDepth = 2;
@@ -28,7 +28,7 @@ public class MinMax extends Player {
     private QualityHeuristic qualityHeuristic = new FieldsNearby();
     private Field bestMove;
 
-    MinMax(Board board, Stone stone, RulesSet rules) {
+    AlphaBeta(Board board, Stone stone, RulesSet rules) {
         super(board, stone);
         this.rules = rules;
     }
@@ -38,7 +38,7 @@ public class MinMax extends Player {
         bestMove = Field.EMPTY_FIELD;
         Board board = this.board.copy();
         heuristic.renewWith(board, stone);
-        minMax(Level.MAX, 1, moveNumber, board);
+        alphaBeta(Level.MAX, 1, Integer.MAX_VALUE, moveNumber, board);
 
         if (stopped && !endOfTime) {
             return;
@@ -47,7 +47,7 @@ public class MinMax extends Player {
         this.board.putStone(bestMove.getRow(), bestMove.getColumn(), stone);
     }
 
-    private int minMax(Level level, int depth, int moveNumber, Board board) {
+    private int alphaBeta(Level level, int depth, int currentBest, int moveNumber, Board board) {
         if (stopped) {
             return Integer.MIN_VALUE;
         }
@@ -61,13 +61,16 @@ public class MinMax extends Player {
         for (Field field : fields) {
             board.putStone(field.getRow(), field.getColumn(), level.getStone(stone));
             heuristic.updateValueFor(field.getRow(), field.getColumn());
-            int current = minMax(level.opposite(), depth + 1, moveNumber + 1, board);
+            int current = alphaBeta(level.opposite(), depth + 1, best, moveNumber + 1, board);
             board.pickUpStone(field.getRow(), field.getColumn());
             heuristic.updateValueFor(field.getRow(), field.getColumn());
             if (level.isBetter(current, best)) {
                 best = current;
                 if (depth == 1) {
                     bestMove = field;
+                }
+                if (level.isBetter(best, currentBest)) {
+                    return best;
                 }
             }
         }

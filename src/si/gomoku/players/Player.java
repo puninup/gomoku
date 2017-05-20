@@ -61,6 +61,17 @@ public abstract class Player {
             public String toString() {
                 return "Min-max";
             }
+        },
+        ALPHA_BETA {
+            @Override
+            public Player getInstance(Board board, Stone stone, RulesSet rules) {
+                return new AlphaBeta(board, stone, rules);
+            }
+
+            @Override
+            public String toString() {
+                return "Alpha-beta";
+            }
         };
 
         public abstract Player getInstance(Board board, Stone stone, RulesSet rules);
