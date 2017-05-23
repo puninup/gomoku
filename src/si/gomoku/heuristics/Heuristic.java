@@ -73,26 +73,15 @@ public abstract class Heuristic {
                 return "Sekwencje";
             }
         },
-        SEQUENCE_GROUP {
+        GROUP_SEQUENCE {
             @Override
             public Heuristic getInstance() {
-                return new SequenceGroupHeuristic();
+                return new GroupSequenceHeuristic();
             }
 
             @Override
             public String toString() {
-                return "Sekwencje + grupy";
-            }
-        },
-        GROUP_NEIGHBORS_BALANCED {
-            @Override
-            public Heuristic getInstance() {
-                return new SequenceNeighborsHeuristic();
-            }
-
-            @Override
-            public String toString() {
-                return "Grupy + sąsiedzi (zrównoważony)";
+                return "Grupy + Sekwencje";
             }
         },
         GROUP_NEIGHBORS {
@@ -103,7 +92,18 @@ public abstract class Heuristic {
 
             @Override
             public String toString() {
-                return "Grupy + sąsiedzi (grupa przeważa)";
+                return "Grupy + Sąsiedzi";
+            }
+        },
+        NEIGHBORS_SEQUENCE {
+            @Override
+            public Heuristic getInstance() {
+                return new NeighborsSequenceHeuristic();
+            }
+
+            @Override
+            public String toString() {
+                return "Sąsiedzi + Sekwencje";
             }
         },
         GROUP_NEIGHBORS_SEQUENCE {
@@ -114,7 +114,7 @@ public abstract class Heuristic {
 
             @Override
             public String toString() {
-                return "Grupy + sąsiedzi + sekwencje (zrównoważony)";
+                return "Grupy + Sąsiedzi + Sekwencje";
             }
         };
 

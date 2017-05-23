@@ -45,6 +45,9 @@ public class MinMax extends PlayerAI {
         int best = level.getWorstValue();
         rules.performForMove(moveNumber + depth, board);
         List<Field> fields = qualifier.getPreferableFields(board);
+        if (depth == 0) {
+            bestMove = fields.get(0);
+        }
         for (Field field : fields) {
             board.putStone(field.getRow(), field.getColumn(), level.getStone(stone));
             heuristic.updateValueFor(field.getRow(), field.getColumn());

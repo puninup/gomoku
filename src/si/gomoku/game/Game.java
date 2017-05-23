@@ -26,11 +26,6 @@ public class Game extends Thread implements Observer {
     private CountDownTimer timer;
     private int movesCounter;
 
-    long lightMoveTime = 0;
-    long darkMoveTime = 0;
-
-
-
     private List<GameObserver> observers = new LinkedList<>();
 
     public Game() {

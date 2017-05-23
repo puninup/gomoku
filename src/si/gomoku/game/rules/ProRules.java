@@ -25,6 +25,7 @@ public class ProRules implements RulesSet {
                 unlockSquareAtMiddle(1, board);
                 break;
             case 2:
+                lockAllFields(board);
                 unlockSquareAtMiddle(3, board);
                 lockSquareAtMiddle(1, board);
                 break;

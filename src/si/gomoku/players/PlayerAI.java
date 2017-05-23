@@ -13,10 +13,7 @@ import si.gomoku.game.Stone;
 import si.gomoku.game.rules.RulesSet;
 import si.gomoku.heuristics.GroupHeuristic;
 import si.gomoku.heuristics.Heuristic;
-import si.gomoku.qualifiers.NeighborsFields;
-import si.gomoku.qualifiers.NeighborsOfNeighborsFields;
-import si.gomoku.qualifiers.Qualifier;
-import si.gomoku.qualifiers.QualityHeuristic;
+import si.gomoku.qualifiers.*;
 
 /**
  * @author Tomasz Urbas
@@ -68,12 +65,12 @@ public abstract class PlayerAI extends Player {
         Label deepLabel = new Label("Głębokość");
 
         Label deepValueLabel = new Label();
-        deepValueLabel.setPadding(new Insets(2,0,0,5));
+        deepValueLabel.setPadding(new Insets(-2,0,0,10));
 
         Slider deepSlider = new Slider();
         deepSlider.setMin(1);
         deepSlider.setMax(5);
-        deepSlider.setPadding(new Insets(5,0,0,0));
+        deepSlider.setPadding(new Insets(7,0,0,0));
         deepSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             Long value = Math.round((double) newVal);
             deepSlider.setValue(value);
@@ -83,14 +80,14 @@ public abstract class PlayerAI extends Player {
         deepSlider.setValue(2);
 
         Label heuristicLabel = new Label("Heurystyka");
-        deepValueLabel.setPadding(new Insets(10,0,0,0));
+        deepValueLabel.setPadding(new Insets(5,0,0,0));
 
         ChoiceBox<Heuristic.Type> heuristicTypes = new ChoiceBox<>(FXCollections.observableArrayList(Heuristic.Type.values()));
         heuristicTypes.getSelectionModel().selectedItemProperty().addListener(new ChangeHeuristic(this));
         heuristicTypes.setPrefWidth(180);
 
-        Label qualityHeuristicLabel = new Label("Zakres ruchu");
-        qualityHeuristicLabel.setPadding(new Insets(10,0,0,0));
+        Label moveLabel = new Label("Zakres ruchu");
+        moveLabel.setPadding(new Insets(5,0,0,0));
 
         ToggleGroup moveZoneGroup = new ToggleGroup();
 
@@ -104,10 +101,27 @@ public abstract class PlayerAI extends Player {
                 .addListener(new AddRemoveQualityHeuristic(this, new NeighborsOfNeighborsFields()));
         neighborsOfNeighborsFields.setToggleGroup(moveZoneGroup);
 
+        Label sortingLabel = new Label("Wybór kolejności węzłów");
+        sortingLabel.setPadding(new Insets(5,0,0,0));
+
         HBox moveZone = new HBox(neighborsFields, neighborsOfNeighborsFields);
 
+        ToggleGroup sortingGroup = new ToggleGroup();
+
+        ToggleButton lastMoveTracker = new ToggleButton("Najbliżej ostatniego ruchu");
+        lastMoveTracker.selectedProperty()
+                .addListener(new AddRemoveQualityHeuristic(this, new LastMoveTracker()));
+        lastMoveTracker.setToggleGroup(sortingGroup);
+
+        ToggleButton sequencesTracker = new ToggleButton("Wokoło największych ciągów");
+        sequencesTracker.selectedProperty()
+                .addListener(new AddRemoveQualityHeuristic(this, new SequencesTracker()));
+        sequencesTracker.setToggleGroup(sortingGroup);
+
+        VBox sortingZone = new VBox(lastMoveTracker, sequencesTracker);
+
         view.getChildren().addAll(deepLabel, new HBox(deepSlider, deepValueLabel),
-                heuristicLabel, heuristicTypes, qualityHeuristicLabel, moveZone);
+                heuristicLabel, heuristicTypes, moveLabel, moveZone, sortingLabel, sortingZone);
         view.setPadding(new Insets(10));
         heuristicTypes.setValue(Heuristic.Type.GROUP);
     }

@@ -44,7 +44,13 @@ public class AlphaBeta extends PlayerAI {
 
         Level level = (depth % 2 == 0) ? Level.MAX : Level.MIN;
         rules.performForMove(moveNumber + depth, board);
+        if (depth == 0) {
+            System.out.println("pierwszy");
+        }
         List<Field> fields = qualifier.getPreferableFields(board);
+        if (depth == 0) {
+            bestMove = fields.get(0);
+        }
         for (Field field : fields) {
             board.putStone(field.getRow(), field.getColumn(), level.getStone(stone));
             heuristic.updateValueFor(field.getRow(), field.getColumn());

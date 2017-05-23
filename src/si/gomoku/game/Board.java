@@ -95,43 +95,6 @@ public class Board implements Copyable<Board> {
         return lastMove;
     }
 
-    public List<List<Stone>> getAllStoneSequences() {
-        List<List<Stone>> sequencesOfStones = new LinkedList<>();
-        for (int i = 0; i < DIMENSION; i++) {
-            sequencesOfStones.add(getRowStoneSequence(i));
-            sequencesOfStones.add(getColumnStoneSequence(i));
-            sequencesOfStones.add(getLeftDiagonalStoneSequence(i, i));
-            sequencesOfStones.add(getRightDiagonalStoneSequence(i, i));
-        }
-        return sequencesOfStones;
-    }
-
-    public List<Stone> getRowStoneSequence(int row) {
-        List<Field> fieldSequence =  fields.getRow(row);
-        return mapToStoneList(fieldSequence);
-    }
-
-    public List<Stone> getColumnStoneSequence(int column) {
-        List<Field> fieldSequence =  fields.getColumn(column);
-        return mapToStoneList(fieldSequence);
-    }
-
-    public List<Stone> getLeftDiagonalStoneSequence(int row, int column) {
-        List<Field> fieldSequence =  fields.getLeftDiagonal(row, column);
-        return mapToStoneList(fieldSequence);
-    }
-
-    public List<Stone> getRightDiagonalStoneSequence(int row, int column) {
-        List<Field> fieldSequence =  fields.getRightDiagonal(row, column);
-        return mapToStoneList(fieldSequence);
-    }
-
-    private List<Stone> mapToStoneList(List<Field> fields) {
-        return fields.stream()
-                .map(Field::getStone)
-                .collect(Collectors.toList());
-    }
-
     public List<Field> getAllNeighbors(int row, int column) {
         List<Field> neighbors = new LinkedList<>();
         for (Direction direction : Direction.values()) {
