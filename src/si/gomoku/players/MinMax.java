@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class MinMax extends PlayerAI {
     private Field bestMove;
+    private int moveNumber;
 
     MinMax(Board board, Stone stone, RulesSet rules) {
         super(board, stone, rules);
@@ -20,9 +21,10 @@ public class MinMax extends PlayerAI {
     @Override
     public void move(int moveNumber) {
         bestMove = Field.EMPTY_FIELD;
+        this.moveNumber = moveNumber;
         Board board = this.board.copy();
         heuristic.renewWith(board, stone);
-        minMax(Level.MAX, 1, moveNumber, board);
+        minMax(0, board);
 
         if (stopped && !endOfTime) {
             return;
@@ -31,7 +33,7 @@ public class MinMax extends PlayerAI {
         this.board.putStone(bestMove.getRow(), bestMove.getColumn(), stone);
     }
 
-    private int minMax(Level level, int depth, int moveNumber, Board board) {
+    private int minMax(int depth, Board board) {
         if (stopped) {
             return Integer.MIN_VALUE;
         }
@@ -39,18 +41,22 @@ public class MinMax extends PlayerAI {
             return heuristic.evaluate();
         }
 
+        Level level = (depth % 2 == 0) ? Level.MAX : Level.MIN;
         int best = level.getWorstValue();
-        rules.performForMove(moveNumber, board);
+        rules.performForMove(moveNumber + depth, board);
         List<Field> fields = qualifier.getPreferableFields(board);
         for (Field field : fields) {
             board.putStone(field.getRow(), field.getColumn(), level.getStone(stone));
             heuristic.updateValueFor(field.getRow(), field.getColumn());
-            int current = minMax(level.opposite(), depth + 1, moveNumber + 1, board);
+
+            int current = minMax(depth + 1, board);
+
             board.pickUpStone(field.getRow(), field.getColumn());
             heuristic.revertUpdate();
+
             if (level.isBetter(current, best)) {
                 best = current;
-                if (depth == 1) {
+                if (depth == 0) {
                     bestMove = field;
                 }
             }

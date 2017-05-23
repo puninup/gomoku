@@ -41,6 +41,10 @@ public abstract class PlayerAI extends Player {
         this.heuristic = heuristicType.getInstance();
     }
 
+    public void setHeuristic(Heuristic heuristic) {
+        this.heuristic = heuristic;
+    }
+
     public void addQualityHeuristic(QualityHeuristic heuristic) {
         this.qualifier.addHeuristic(heuristic);
     }
@@ -50,7 +54,7 @@ public abstract class PlayerAI extends Player {
     }
 
     boolean isLeaf(int depth, Board board) {
-        return depth > maxDepth
+        return depth == maxDepth
                 || rules.isWinning(board)
                 || rules.isDraw(board);
     }

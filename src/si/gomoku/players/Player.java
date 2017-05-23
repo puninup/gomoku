@@ -14,6 +14,9 @@ public abstract class Player {
     Board board;
     Stone stone;
 
+    private double seconds = 0;
+    private long numberOfMoves = 0;
+
     Player(Board board, Stone stone) {
         this.board = board;
         this.stone = stone;
@@ -22,7 +25,12 @@ public abstract class Player {
     public void doMove(int moveNumber) {
         stopped = false;
         endOfTime = false;
+
+        long startMove = System.nanoTime();
         move(moveNumber);
+        long endMove = System.nanoTime();
+        seconds += (endMove - startMove) / 1000000000.0;
+        numberOfMoves++;
     }
 
     public abstract void move(int moveNumber);
@@ -34,6 +42,15 @@ public abstract class Player {
     public void nextTurn() {
         endOfTime = true;
         stop();
+    }
+
+    public double getAvgTime() {
+        return seconds / numberOfMoves;
+    }
+
+    public void resetTime() {
+        this.seconds = 0;
+        this.numberOfMoves = 0;
     }
 
     public abstract VBox getSettingsView();

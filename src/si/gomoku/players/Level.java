@@ -29,7 +29,7 @@ enum Level {
 
         @Override
         public Stone getStone(Stone myStone) {
-            return myStone.oppositeStone();
+            return myStone.opposite();
         }
     },
     MAX {

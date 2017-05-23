@@ -1,4 +1,4 @@
-package si.gomoku.evaluators;
+package si.gomoku.heuristics.evaluators;
 
 import si.gomoku.game.Board;
 import si.gomoku.game.Stone;

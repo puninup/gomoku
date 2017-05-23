@@ -1,12 +1,12 @@
 package si.gomoku.heuristics;
 
-import si.gomoku.evaluators.GroupEvaluator;
+import si.gomoku.heuristics.evaluators.GroupEvaluator;
 
 /**
  * @author Tomasz Urbas
  */
 public class GroupHeuristic extends Heuristic {
     public GroupHeuristic() {
-        addEvaluator(new GroupEvaluator());
+        addEvaluatorWithWeight(new GroupEvaluator(), 0.2);
     }
 }

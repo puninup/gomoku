@@ -1,4 +1,4 @@
-package si.gomoku.evaluators;
+package si.gomoku.heuristics.evaluators;
 
 import si.gomoku.game.Board;
 import si.gomoku.game.MatrixPartIndex;
@@ -9,15 +9,15 @@ import java.util.*;
 /**
  * @author Tomasz Urbas
  */
-public class GroupEvaluator implements Evaluator {
+public class SequenceEvaluator implements Evaluator {
     private static Map<Integer, Integer> pointsOfSequence = new HashMap<>();
     static {
         pointsOfSequence.put(0, 0);
         pointsOfSequence.put(1, 1);
-        pointsOfSequence.put(2, 5);
-        pointsOfSequence.put(3, 50);
-        pointsOfSequence.put(4, 1000);
-        pointsOfSequence.put(5, 100000);
+        pointsOfSequence.put(2, 3);
+        pointsOfSequence.put(3, 27);
+        pointsOfSequence.put(4, 100);
+        pointsOfSequence.put(5, 10000);
         for (int i = 6; i < Board.DIMENSION; i++) {
             pointsOfSequence.put(i, 0);
         }
@@ -65,7 +65,9 @@ public class GroupEvaluator implements Evaluator {
     private int evaluateSequence(List<Stone> sequence) {
         int value = 0;
         value += evaluateSequence(sequence, stone);
-        value -= evaluateSequence(sequence, stone.oppositeStone()) * 2;
+
+        int opponentsValue = evaluateSequence(sequence, stone.opposite());
+        value -= opponentsValue * opponentsValue;
         return value;
     }
 
@@ -81,7 +83,7 @@ public class GroupEvaluator implements Evaluator {
             if (stone == evaluatedStone) {
                 length++;
                 possibleLength++;
-            } else if (stone == evaluatedStone.oppositeStone()) {
+            } else if (stone == evaluatedStone.opposite()) {
                 value += calculateValue(length, possibleLength);
                 length = 0;
                 possibleLength = 0;

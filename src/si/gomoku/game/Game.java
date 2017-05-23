@@ -26,6 +26,11 @@ public class Game extends Thread implements Observer {
     private CountDownTimer timer;
     private int movesCounter;
 
+    long lightMoveTime = 0;
+    long darkMoveTime = 0;
+
+
+
     private List<GameObserver> observers = new LinkedList<>();
 
     public Game() {
@@ -61,7 +66,7 @@ public class Game extends Thread implements Observer {
         rules.performForMove(movesCounter + 1, board);
 
         for (GameObserver observer : observers) {
-            observer.nextTurn(board.getLastMove().getStone().oppositeStone());
+            observer.nextTurn(board.getLastMove().getStone().opposite());
         }
 
         timer.reset();
@@ -90,6 +95,11 @@ public class Game extends Thread implements Observer {
         for (GameObserver observer : observers) {
             observer.endGame(winner);
         }
+
+        System.out.println("CZARNY: " + darkPlayer.getAvgTime());
+        System.out.println("BIALY: " + lightPlayer.getAvgTime());
+        darkPlayer.resetTime();
+        lightPlayer.resetTime();
     }
 
     public void resetGame() {
@@ -125,7 +135,7 @@ public class Game extends Thread implements Observer {
         }
     }
 
-    public void assignPlayer(Player.Type playerType, Stone stone) {
+    public Player assignPlayer(Player.Type playerType, Stone stone) {
         Player player = playerType.getInstance(board, stone, rules);
         switch (stone) {
             case DARK:
@@ -134,6 +144,7 @@ public class Game extends Thread implements Observer {
             case LIGHT:
                 this.lightPlayer = player;
         }
+        return player;
     }
 
     public Player getPlayer(Stone stone) {

@@ -13,6 +13,7 @@ import java.util.List;
 public class AlphaBeta extends PlayerAI {
 
     private Field bestMove;
+    private int moveNumber;
 
     AlphaBeta(Board board, Stone stone, RulesSet rules) {
         super(board, stone, rules);
@@ -21,9 +22,10 @@ public class AlphaBeta extends PlayerAI {
     @Override
     public void move(int moveNumber) {
         bestMove = Field.EMPTY_FIELD;
+        this.moveNumber = moveNumber;
         Board board = this.board.copy();
         heuristic.renewWith(board, stone);
-        alphaBeta(Level.MAX, 1, Integer.MAX_VALUE, moveNumber, board);
+        alphaBeta(0, Integer.MIN_VALUE, Integer.MAX_VALUE, board);
 
         if (stopped && !endOfTime) {
             return;
@@ -32,7 +34,7 @@ public class AlphaBeta extends PlayerAI {
         this.board.putStone(bestMove.getRow(), bestMove.getColumn(), stone);
     }
 
-    private int alphaBeta(Level level, int depth, int currentBest, int moveNumber, Board board) {
+    private int alphaBeta(int depth, int alpha, int beta, Board board) {
         if (stopped) {
             return Integer.MIN_VALUE;
         }
@@ -40,25 +42,27 @@ public class AlphaBeta extends PlayerAI {
             return heuristic.evaluate();
         }
 
-        int best = level.getWorstValue();
-        rules.performForMove(moveNumber, board);
+        Level level = (depth % 2 == 0) ? Level.MAX : Level.MIN;
+        rules.performForMove(moveNumber + depth, board);
         List<Field> fields = qualifier.getPreferableFields(board);
         for (Field field : fields) {
             board.putStone(field.getRow(), field.getColumn(), level.getStone(stone));
             heuristic.updateValueFor(field.getRow(), field.getColumn());
-            int current = alphaBeta(level.opposite(), depth + 1, best, moveNumber + 1, board);
+
+            int current = alphaBeta(depth + 1, beta, alpha, board);
+
             board.pickUpStone(field.getRow(), field.getColumn());
             heuristic.revertUpdate();
-            if (level.isBetter(current, best)) {
-                best = current;
-                if (depth == 1) {
+
+            if (level.isBetterOrEqual(current, beta)) {
+                return current;
+            } else if (level.isBetter(current, alpha)) {
+                alpha = current;
+                if (depth == 0) {
                     bestMove = field;
-                }
-                if (level.isBetterOrEqual(best, currentBest)) {
-                    return best;
                 }
             }
         }
-        return best;
+        return alpha;
     }
 }

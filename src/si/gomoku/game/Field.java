@@ -2,6 +2,7 @@ package si.gomoku.game;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -153,7 +154,9 @@ public class Field implements Copyable<Field> {
         stoneView.setStrokeWidth(STROKE_SIZE * 3);
         stoneView.setStroke(stone.getColor());
 
-        view = new Group(backgroundView, stoneView);
+        Label label = new Label(String.format("(%d,%d)", row, column));
+
+        view = new Group(backgroundView, label, stoneView);
     }
 
     public Node getView() {

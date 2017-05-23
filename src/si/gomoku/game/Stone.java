@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 public enum Stone {
     DARK(Color.BLACK) {
         @Override
-        public Stone oppositeStone() {
+        public Stone opposite() {
             return Stone.LIGHT;
         }
 
@@ -19,7 +19,7 @@ public enum Stone {
     },
     LIGHT(Color.WHITE) {
         @Override
-        public Stone oppositeStone() {
+        public Stone opposite() {
             return Stone.DARK;
         }
 
@@ -30,7 +30,7 @@ public enum Stone {
     },
     NONE(Color.TRANSPARENT) {
         @Override
-        public Stone oppositeStone() {
+        public Stone opposite() {
             return Stone.NONE;
         }
     };
@@ -45,5 +45,5 @@ public enum Stone {
         return color;
     }
 
-    public abstract Stone oppositeStone();
+    public abstract Stone opposite();
 }

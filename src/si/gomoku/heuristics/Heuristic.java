@@ -1,8 +1,8 @@
 package si.gomoku.heuristics;
 
-import si.gomoku.evaluators.Evaluator;
 import si.gomoku.game.Board;
 import si.gomoku.game.Stone;
+import si.gomoku.heuristics.evaluators.Evaluator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,25 +11,23 @@ import java.util.Map;
  * @author Tomasz Urbas
  */
 public abstract class Heuristic {
-    private Map<Evaluator, Integer> weightOfEvaluators = new HashMap<>();
-    private int totalWeight = 0;
+    private Map<Evaluator, Double> weightOfEvaluators = new HashMap<>();
 
     void addEvaluator(Evaluator evaluator) {
         addEvaluatorWithWeight(evaluator, 1);
     }
 
-    void addEvaluatorWithWeight(Evaluator evaluator, int weight) {
+    void addEvaluatorWithWeight(Evaluator evaluator, double weight) {
         weightOfEvaluators.put(evaluator, weight);
-        totalWeight += weight;
     }
 
     public int evaluate() {
         int value = 0;
-        for (Map.Entry<Evaluator, Integer> weightOfEvaluator : weightOfEvaluators.entrySet())
+        for (Map.Entry<Evaluator, Double> weightOfEvaluator : weightOfEvaluators.entrySet())
         {
             Evaluator evaluator = weightOfEvaluator.getKey();
-            int weight = weightOfEvaluator.getValue();
-            value += evaluator.evaluate() * weight / totalWeight;
+            double weight = weightOfEvaluator.getValue();
+            value += evaluator.evaluate() * weight;
         }
         return value;
     }
@@ -61,18 +59,62 @@ public abstract class Heuristic {
 
             @Override
             public String toString() {
-                return "Ocenianie grup";
+                return "Grupy";
             }
         },
-        NEIGHBORS {
+        SEQUENCE {
             @Override
             public Heuristic getInstance() {
-                return new NeighborsHeuristic();
+                return new SequenceHeuristic();
             }
 
             @Override
             public String toString() {
-                return "Pole do popisu";
+                return "Sekwencje";
+            }
+        },
+        SEQUENCE_GROUP {
+            @Override
+            public Heuristic getInstance() {
+                return new SequenceGroupHeuristic();
+            }
+
+            @Override
+            public String toString() {
+                return "Sekwencje + grupy";
+            }
+        },
+        GROUP_NEIGHBORS_BALANCED {
+            @Override
+            public Heuristic getInstance() {
+                return new SequenceNeighborsHeuristic();
+            }
+
+            @Override
+            public String toString() {
+                return "Grupy + sąsiedzi (zrównoważony)";
+            }
+        },
+        GROUP_NEIGHBORS {
+            @Override
+            public Heuristic getInstance() {
+                return new GroupNeighborsHeuristic();
+            }
+
+            @Override
+            public String toString() {
+                return "Grupy + sąsiedzi (grupa przeważa)";
+            }
+        },
+        GROUP_NEIGHBORS_SEQUENCE {
+            @Override
+            public Heuristic getInstance() {
+                return new GroupNeighborsSequenceHeuristic();
+            }
+
+            @Override
+            public String toString() {
+                return "Grupy + sąsiedzi + sekwencje (zrównoważony)";
             }
         };
 

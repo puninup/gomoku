@@ -156,6 +156,10 @@ public class Board implements Copyable<Board> {
         return fields.getPartIndexesFor(row, column);
     }
 
+    public List<Field> getFieldSequence(MatrixPartIndex partIndex) {
+        return fields.getPart(partIndex);
+    }
+
     public List<Stone> getStoneSequence(MatrixPartIndex partIndex) {
         List<Stone> stones = new LinkedList<>();
         fields.getPart(partIndex)
