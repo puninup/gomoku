@@ -39,14 +39,12 @@ public class AlphaBeta extends PlayerAI {
             return Integer.MIN_VALUE;
         }
         if (isLeaf(depth, board)) {
+            numberOfCalculations++;
             return heuristic.evaluate();
         }
 
         Level level = (depth % 2 == 0) ? Level.MAX : Level.MIN;
         rules.performForMove(moveNumber + depth, board);
-        if (depth == 0) {
-            System.out.println("pierwszy");
-        }
         List<Field> fields = qualifier.getPreferableFields(board);
         if (depth == 0) {
             bestMove = fields.get(0);

@@ -91,10 +91,10 @@ public class Game extends Thread implements Observer {
             observer.endGame(winner);
         }
 
-        System.out.println("CZARNY: " + darkPlayer.getAvgTime());
-        System.out.println("BIALY: " + lightPlayer.getAvgTime());
-        darkPlayer.resetTime();
-        lightPlayer.resetTime();
+        System.out.println("CZARNY: " + darkPlayer.getAvgTime() + "(" + darkPlayer.getNumberOfCalculations() + ")");
+        System.out.println("BIALY: " + lightPlayer.getAvgTime() + "(" + lightPlayer.getNumberOfCalculations() + ")");
+        darkPlayer.resetStatistics();
+        lightPlayer.resetStatistics();
     }
 
     public void resetGame() {

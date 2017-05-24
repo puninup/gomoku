@@ -16,6 +16,7 @@ public abstract class Player {
 
     private double seconds = 0;
     private long numberOfMoves = 0;
+    protected long numberOfCalculations = 0;
 
     Player(Board board, Stone stone) {
         this.board = board;
@@ -48,9 +49,14 @@ public abstract class Player {
         return seconds / numberOfMoves;
     }
 
-    public void resetTime() {
+    public long getNumberOfCalculations() {
+        return numberOfCalculations;
+    }
+
+    public void resetStatistics() {
         this.seconds = 0;
         this.numberOfMoves = 0;
+        this.numberOfCalculations = 0;
     }
 
     public abstract VBox getSettingsView();
